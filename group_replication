@@ -55,7 +55,7 @@ loose-group_replication_recovery_get_public_key=on
 loose-group_replication_recovery_use_ssl=ON
 loose-group_replication_group_name="62e748d8-f542-4e1a-ac26-a3f998877998"
 loose-group_replication_start_on_boot=OFF
-loose-group_replication_local_address="172.30.0.102:3306"
+loose-group_replication_local_address="172.30.0.102:13306"
 loose-group_replication_group_seeds="172.30.0.101:13306,172.30.0.102:13306,172.30.0.103:13306,172.30.0.104:13306"
 loose-group_replication_bootstrap_group=OFF
 
