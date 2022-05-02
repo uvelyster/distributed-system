@@ -1,5 +1,5 @@
 
-docker network create demo-net 
+docker network create -d bridge --subnet 172.30.0.0/24 demo-net 
 docker pull mysql 
 
 systemctl stop firewalld
