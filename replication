@@ -1,0 +1,99 @@
+
+docker network create demo-net 
+docker pull mysql 
+
+systemctl stop firewalld
+systemctl disable firewalld
+
+systemctl restart docker 
+
+docker run --ip 172.30.0.101 --network demo-net \
+ --name mysql1 -d \
+ -e MYSQL_ROOT_PASSWORD=root \
+ mysql 
+
+docker run --ip 172.30.0.102 --network demo-net \
+ --name mysql2 -d \
+ -e MYSQL_ROOT_PASSWORD=root \
+ mysql 
+
+docker exec -it mysql1 bash
+cat /etc/mysql/my.cnf
+exit
+
+vi my1.cnf
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+secure-file-priv= NULL
+
+server_id=1
+master_info_repository=TABLE
+relay_log_info_repository=TABLE
+log_bin=master_binlog
+binlog_format=row
+:wq
+
+cp my1.cnf my2.cfg
+vi my2.cnf
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+secure-file-priv= NULL
+server_id=2
+master_info_repository=TABLE
+relay_log_info_repository=TABLE
+log_bin=master_binlog
+binlog_format=row
+:wq
+
+docker cp my1.cnf mysql1:/etc/mysql/my.cnf
+docker cp my2.cnf mysql2:/etc/mysql/my.cnf
+
+docker restart mysql1 mysql2 
+
+vi create_rpl_user.sql
+SET SQL_LOG_BIN=0;
+CREATE USER rpl_user@'172.30.0.102' IDENTIFIED  WITH mysql_native_password BY 'rpl_pass';
+GRANT REPLICATION SLAVE ON *.* TO rpl_user@'172.30.0.102';
+FLUSH PRIVILEGES;
+SET SQL_LOG_BIN=1;
+:wq
+
+docker cp create_rpl_user.sql mysql1:/
+docker cp create_rpl_user.sql mysql2:/
+
+docker exec -it mysql1 bash
+mysql -uroot -proot -e "source /create_rpl_user.sql"
+exit
+
+docker exec -it mysql2 bash
+mysql -uroot -proot -e "source /create_rpl_user.sql"
+exit
+
+mysql -uroot -proot 
+use mysql;
+select user, host from user;
+
+docker exec -it mysql1 bash
+mysql -uroot -proot
+SHOW MASTER STATUS\G
+exit
+exit
+
+
+docker exec -it mysql2 bash
+mysql -uroot -proot
+CHANGE MASTER TO 
+MASTER_USER='rpl_user', 
+MASTER_PASSWORD='rpl_pass', 
+MASTER_HOST='172.30.0.101', 
+MASTER_PORT=3306, 
+MASTER_LOG_FILE='master_binlog.000002', 
+MASTER_LOG_POS=157;
+
+START SLAVE;
+
+
