@@ -35,17 +35,18 @@ log_bin=master_binlog
 binlog_format=row
 :wq
 
-cp my1.cnf my2.cfg
+cp my1.cnf my2.cnf
 vi my2.cnf
 [mysqld]
 pid-file        = /var/run/mysqld/mysqld.pid
 socket          = /var/run/mysqld/mysqld.sock
 datadir         = /var/lib/mysql
 secure-file-priv= NULL
+
 server_id=2
 master_info_repository=TABLE
 relay_log_info_repository=TABLE
-log_bin=master_binlog
+log_bin=slave_log
 binlog_format=row
 :wq
 
@@ -56,7 +57,7 @@ docker restart mysql1 mysql2
 
 vi create_rpl_user.sql
 SET SQL_LOG_BIN=0;
-CREATE USER rpl_user@'172.30.0.102' IDENTIFIED  WITH mysql_native_password BY 'rpl_pass';
+CREATE USER rpl_user@'172.30.0.102' IDENTIFIED WITH mysql_native_password BY 'rpl_pass';
 GRANT REPLICATION SLAVE ON *.* TO rpl_user@'172.30.0.102';
 FLUSH PRIVILEGES;
 SET SQL_LOG_BIN=1;
@@ -95,5 +96,23 @@ MASTER_LOG_FILE='master_binlog.000002',
 MASTER_LOG_POS=157;
 
 START SLAVE;
+SHOW SLAVE STATUS;
 
 
+
+# Verify 
+docker exec -it mysql1 bash
+mysql -uroot -proot
+
+CREATE DATABASE test;
+USE test;
+CREATE TABLE test.t1 (c1 INT PRIMARY KEY, c2 TEXT NOT NULL);
+INSERT INTO test.t1 VALUES (1, 'test');
+SELECT * from test.t1;
+exit
+exit
+
+docker exec -it mysql2 bash
+mysql -uroot -proot
+USE test;
+SELECT * from test.t1;
