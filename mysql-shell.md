@@ -93,12 +93,6 @@ Create Cluster using sandbox
 dba.createCluster('mycluster')
 ```
 
-다음은 두가지 옵션에 대한 설명입니다.
-
-- *복제* : 클러스터에 추가하려는 인스턴스에 기증자를 복제하고 인스턴스에 포함된 모든 트랜잭션을 삭제하려면 이 옵션을 선택합니다. MySQL Clone 플러그인이 자동으로 설치됩니다. 필요한 InnoDB 클러스터 복구 계정이 생성됩니다. `[BACKUP_ADMIN](https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_backup-admin)` 특권. 비어 있거나(트랜잭션을 처리하지 않음) 유지하지 않으려는 트랜잭션이 포함된 인스턴스를 추가한다고 가정하고 복제 옵션을 선택합니다. 그런 다음 클러스터는 MySQL Clone을 사용하여 결합 인스턴스를 기증자 클러스터 구성원의 스냅샷으로 완전히 덮어씁니다. 기본적으로 이 방법을 사용하고 이 프롬프트를 비활성화하려면 클러스터의 `recoveryMethod`옵션을 로 설정하십시오 `clone`.
-
-- *증분 복구 증분 복구* 를 사용하여 클러스터에서 처리한 모든 트랜잭션을 비동기 복제를 사용하여 조인 인스턴스로 복구하려면 이 옵션을 선택합니다. 증분 복구는 클러스터에서 처리한 모든 업데이트가 GTID가 활성화된 상태에서 완료되었으며 제거된 트랜잭션이 없으며 새 인스턴스에 클러스터 또는 클러스터의 하위 집합과 동일한 GTID 세트가 포함되어 있는 경우에 적합합니다. 기본적으로 이 방법을 사용하려면 `recoveryMethod`옵션을 로 `incremental`.
-
 check status
 
 ```bash
