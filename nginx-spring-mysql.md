@@ -50,7 +50,7 @@ server {
     location / {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
-        **proxy_pass  http://petclinic-app;**
+        proxy_pass  http://petclinic-app;
     }
 
     #error_page  404              /404.html;
@@ -86,13 +86,13 @@ server {
     #}
 }
 
-**upstream petclinic-app {
+upstream petclinic-app {
   least_conn;
   # ip_hash;
 
   server tomcat1:8080;
   server tomcat2:8080;
-}**
+}
 ```
 
 ```bash
