@@ -124,7 +124,7 @@ docker run -p 8080:8080 -it --rm  -v "$(pwd)":/usr/src/mymaven  -w /usr/src/myma
 ```
 
 ```bash
-docker run --net demo-net --name mysql -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic mysql
+# docker run --net demo-net --name mysql -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic mysql
 
 docker run --net demo-net -e SPRING_PROFILES_ACTIVE=mysql -e MYSQL_URL=jdbc:mysql://mysql-router:6446/petclinic --name tomcat1 -it -p 8888:8080 openjdk:11 bash
 ```
