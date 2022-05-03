@@ -18,9 +18,16 @@ docker run --net demo-net --name tomcat1 -d -p 8888:8080 tomcat:9
 
 ```bash
 docker cp target/petclinic.war tomcat1:/usr/local/tomcat/webapps/
-docker logs tomcat1 -f
 
 ```
+
+브라우저에서 192.168.56.100:8888 주소로 확인 합니다.
+
+```bash
+docker rm -fv tomcat1
+
+```
+
 
 # Deploy with jar
 
