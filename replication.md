@@ -32,8 +32,8 @@ EOF
 
 cat << EOF > /create_rpl_user.sql
 SET SQL_LOG_BIN=0;
-CREATE USER rpl_user@'172.30.0.102' IDENTIFIED WITH mysql_native_password BY 'rpl_pass';
-GRANT REPLICATION SLAVE ON *.* TO rpl_user@'172.30.0.102';
+CREATE USER rpl_user@'%' IDENTIFIED WITH mysql_native_password BY 'rpl_pass';
+GRANT REPLICATION SLAVE ON *.* TO rpl_user@'%';
 FLUSH PRIVILEGES;
 SET SQL_LOG_BIN=1;
 EOF
