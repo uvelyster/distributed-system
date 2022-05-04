@@ -47,7 +47,7 @@ exit
 ```bash
 cd ~
 yum install -y wget 
-wget [https://downloads.mysql.com/docs/world_x-db.tar.gz](https://downloads.mysql.com/docs/world_x-db.tar.gz)
+wget https://downloads.mysql.com/docs/world_x-db.tar.gz
 tar xvzf world_x-db.tar.gz
 docker cp world_x-db client:/
 
