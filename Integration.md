@@ -74,7 +74,7 @@ dba.configureInstance()
 
 # docker restart mysql1 mysql2 mysql3 mysql4
 
-\c  root:mysecret@mysql1
+\c  root:root@mysql1
 dba.checkInstanceConfiguration()
 dba.createCluster('mycluster')
 var mycls = dba.getCluster()
